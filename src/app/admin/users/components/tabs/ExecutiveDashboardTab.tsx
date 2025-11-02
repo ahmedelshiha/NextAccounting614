@@ -1,15 +1,27 @@
 'use client'
 
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ExecutiveDashboard } from '../ExecutiveDashboard'
 import { AnalyticsCharts } from '../AnalyticsCharts'
-import { DashboardTab } from './DashboardTab'
+import { QuickActionsBar } from '../QuickActionsBar'
+import { OperationsOverviewCards, OperationsMetrics } from '../OperationsOverviewCards'
+import { AdvancedUserFilters, UserFilters } from '../AdvancedUserFilters'
+import { UsersTable } from '../UsersTable'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
 import { useDashboardMetrics, useDashboardRecommendations, useDashboardAnalytics } from '../../hooks/useDashboardMetrics'
 import { UserItem } from '../../contexts/UsersContextProvider'
+import { toast } from 'sonner'
 
 interface ExecutiveDashboardTabProps {
   users: UserItem[]
