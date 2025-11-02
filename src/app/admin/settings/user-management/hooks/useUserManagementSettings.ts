@@ -59,6 +59,14 @@ export function useUserManagementSettings(): UseUserManagementSettingsReturn {
       if (response.ok) {
         const data = await response.json() as UserManagementSettings
         setSettings(data)
+
+        // Emit event for real-time sync
+        globalEventEmitter.emit('settings:changed', {
+          section: 'user-management',
+          changes: updates,
+          timestamp: Date.now(),
+        })
+
         toast.success('Settings updated successfully')
       } else {
         throw new Error(`Failed to update settings: ${response.statusText}`)
