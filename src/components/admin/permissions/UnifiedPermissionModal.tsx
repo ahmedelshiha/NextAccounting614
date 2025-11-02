@@ -417,12 +417,18 @@ export default function UnifiedPermissionModal({
         'font-semibold',
         isMobile ? 'text-lg' : 'text-xl'
       )}>
-        {mode === 'bulk-users' 
-          ? `Manage Permissions for ${displayName}`
-          : `Manage Permissions: ${displayName}`
+        {isRoleForm
+          ? (mode === 'role-create' ? 'Create New Role' : 'Edit Role')
+          : mode === 'bulk-users'
+            ? `Manage Permissions for ${displayName}`
+            : `Manage Permissions: ${displayName}`
         }
       </h2>
-      {targetEmail && (
+      {isRoleForm ? (
+        <p className="text-xs text-gray-600 mt-1">
+          {mode === 'role-create' ? 'Create a new role with specific permissions' : 'Update role information and permissions'}
+        </p>
+      ) : targetEmail && (
         <p className="text-xs text-gray-600 mt-1">
           {targetEmail} • {currentRole || 'UNASSIGNED'}
         </p>
