@@ -1,35 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth/next'
-import { prisma } from '@/lib/prisma'
-import { authOptions } from '@/lib/auth'
+import { NextRequest } from 'next/server'
+import { withTenantContext } from '@/lib/api-wrapper'
+import { requireTenantContext } from '@/lib/tenant-utils'
+import prisma from '@/lib/prisma'
+import { respond } from '@/lib/api-response'
 
 /**
  * POST /api/admin/filter-presets/[id]/set-default
  * Set a filter preset as the default for the entity type
  */
-export async function POST(
+export const POST = withTenantContext(async (
   request: NextRequest,
   { params }: { params: { id: string } }
-) {
+) => {
   try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const ctx = requireTenantContext()
 
-    const user = await prisma.users.findUnique({
-      where: { id: session.user.id },
-    })
-
-    if (!user?.tenantId) {
-      return NextResponse.json(
-        { error: 'No tenant found' },
-        { status: 400 }
-      )
+    if (!ctx?.userId || !ctx?.tenantId) {
+      return respond.unauthorized()
     }
 
     const preset = await prisma.filter_presets.findUnique({
@@ -37,18 +24,13 @@ export async function POST(
     })
 
     if (!preset) {
-      return NextResponse.json(
-        { error: 'Preset not found' },
-        { status: 404 }
-      )
+      return respond.notFound()
     }
 
     // Only owner or admin can set as default
-    if (preset.createdBy !== session.user.id && !session.user.role?.includes('ADMIN')) {
-      return NextResponse.json(
-        { error: 'Forbidden' },
-        { status: 403 }
-      )
+    const isAdmin = ctx.role && ['ADMIN', 'SUPER_ADMIN'].includes(ctx.role)
+    if (preset.createdBy !== ctx.userId && !isAdmin) {
+      return respond.forbidden()
     }
 
     // Clear other default presets for the same entity type
@@ -81,16 +63,12 @@ export async function POST(
       },
     })
 
-    return NextResponse.json({
-      success: true,
+    return respond.ok({
       ...updatedPreset,
       filterConfig: JSON.parse(updatedPreset.filterConfig),
     })
   } catch (error) {
     console.error('Failed to set default preset:', error)
-    return NextResponse.json(
-      { error: 'Failed to set as default' },
-      { status: 500 }
-    )
+    return respond.serverError('Failed to set as default')
   }
-}
+})
