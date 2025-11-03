@@ -1,24 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth/next'
-import { prisma } from '@/lib/prisma'
-import { authOptions } from '@/lib/auth'
+import { NextRequest } from 'next/server'
+import { withTenantContext } from '@/lib/api-wrapper'
+import { requireTenantContext } from '@/lib/tenant-utils'
+import prisma from '@/lib/prisma'
+import { respond } from '@/lib/api-response'
 
 /**
  * POST /api/admin/filter-presets/[id]/track-usage
  * Track filter preset usage and update lastUsedAt
  */
-export async function POST(
+export const POST = withTenantContext(async (
   request: NextRequest,
   { params }: { params: { id: string } }
-) {
+) => {
   try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+    const ctx = requireTenantContext()
+
+    if (!ctx?.userId) {
+      return respond.unauthorized()
     }
 
     const preset = await prisma.filter_presets.findUnique({
@@ -26,18 +24,12 @@ export async function POST(
     })
 
     if (!preset) {
-      return NextResponse.json(
-        { error: 'Preset not found' },
-        { status: 404 }
-      )
+      return respond.notFound()
     }
 
     // Check authorization (public presets or owner)
-    if (!preset.isPublic && preset.createdBy !== session.user.id) {
-      return NextResponse.json(
-        { error: 'Forbidden' },
-        { status: 403 }
-      )
+    if (!preset.isPublic && preset.createdBy !== ctx.userId) {
+      return respond.forbidden()
     }
 
     const updatedPreset = await prisma.filter_presets.update({
@@ -50,16 +42,12 @@ export async function POST(
       },
     })
 
-    return NextResponse.json({
-      success: true,
+    return respond.ok({
       usageCount: updatedPreset.usageCount,
       lastUsedAt: updatedPreset.lastUsedAt,
     })
   } catch (error) {
     console.error('Failed to track preset usage:', error)
-    return NextResponse.json(
-      { error: 'Failed to track usage' },
-      { status: 500 }
-    )
+    return respond.serverError('Failed to track usage')
   }
-}
+})
