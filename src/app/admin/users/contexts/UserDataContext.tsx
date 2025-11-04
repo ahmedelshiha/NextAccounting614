@@ -1,7 +1,8 @@
 'use client'
 
-import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode, useEffect } from 'react'
 import { useUnifiedUserService } from '../hooks/useUnifiedUserService'
+import { useUserManagementRealtime } from '../hooks/useUserManagementRealtime'
 
 // Types
 export interface UserStats {
@@ -69,6 +70,7 @@ export interface HealthLog {
  * - Data loading states
  * - Data errors
  * - Data refresh operations
+ * - Real-time synchronization
  */
 interface UserDataContextType {
   // Data State
@@ -84,6 +86,9 @@ interface UserDataContextType {
   refreshing: boolean
   exporting: boolean
   updating: boolean
+
+  // Real-time State
+  realtimeConnected: boolean
 
   // Error State
   errorMsg: string | null
@@ -140,12 +145,26 @@ export function UserDataContextProvider({
   const [exporting, setExporting] = useState(false)
   const [updating, setUpdating] = useState(false)
 
+  // Real-time state
+  const [realtimeConnected, setRealtimeConnected] = useState(false)
+
   // Error state
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [activityError, setActivityError] = useState<string | null>(null)
 
   // Use unified user service
   const { fetchUsers, invalidateCache } = useUnifiedUserService()
+
+  // Subscribe to real-time user management events
+  const { isConnected: realtimeIsConnected } = useUserManagementRealtime({
+    debounceMs: 500,
+    autoRefresh: true
+  })
+
+  // Update real-time connection state
+  useEffect(() => {
+    setRealtimeConnected(realtimeIsConnected)
+  }, [realtimeIsConnected])
 
   // Data operations
   const refreshUsers = useCallback(async () => {
@@ -197,6 +216,9 @@ export function UserDataContextProvider({
     refreshing,
     exporting,
     updating,
+
+    // Real-time
+    realtimeConnected,
 
     // Errors
     errorMsg,
