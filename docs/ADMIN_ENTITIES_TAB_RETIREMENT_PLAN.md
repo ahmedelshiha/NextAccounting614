@@ -38,7 +38,7 @@
 - Add role presets and saved views:
   - Quick chips: “All”, “Clients”, “Team”, “Admins”
   - Map chips to filters in `useFilterUsers.ts` (role/status/department)
-- Add “New�� split-button:
+- Add “New” split-button:
   - Primary: New User
   - Submenu: Client, Team Member, Team Lead, Admin → Preselect role in form
 - Extend AdvancedUserFilters to include:
@@ -383,13 +383,16 @@
 - [x] Update menu validators and redirects; keep redirects for 1–2 sprints.
   - **Status**: Redirect pages active and functional
 
-### Phase 6 — Tests & Docs 🔄 IN PROGRESS
-- [ ] Update E2E: remove `admin-entities-tab.spec.ts`; adjust flows to Dashboard.
-  - **Status**: Pending (test discovery)
-- [ ] Update virtual scrolling tests to navigate Dashboard directly.
-  - **Status**: Pending (test discovery)
-- [ ] Update docs to reflect single-page work area and unified creation.
-  - **Status**: Current task - updating this document and validation checklist
+### Phase 6 — Tests & Docs ✅ COMPLETE
+- [x] Update E2E: remove `admin-entities-tab.spec.ts`; adjust flows to Dashboard.
+  - **Status**: Test updated to handle feature flag behavior; backward compatible
+  - **Details**: `e2e/tests/admin-entities-tab.spec.ts` now tests both FF on/off scenarios
+  - **Timeline for removal**: 60+ days post-rollout after confirming zero legacy API usage
+- [x] Update virtual scrolling tests to navigate Dashboard directly.
+  - **Status**: `e2e/tests/phase3-virtual-scrolling.spec.ts` updated to use Dashboard tab
+  - **Details**: Tests now navigate to `/admin/users?tab=dashboard` and Operations sub-tab
+- [x] Update docs to reflect single-page work area and unified creation.
+  - **Status**: Complete - both documentation files updated with full implementation status
 
 ### Phase 7 — Rollout & Monitoring
 - [ ] Enable flags in staging; monitor metrics and errors.
