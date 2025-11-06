@@ -179,6 +179,42 @@ export function EnterpriseUsersPage() {
     }
   }
 
+  // If workstation is enabled, render full-page workstation layout (no tabs)
+  if (isWorkstationEnabled) {
+    return (
+      <ErrorBoundary
+        fallback={({ error, resetError }) => (
+          <div className="p-8 text-center min-h-screen bg-gray-50">
+            <div className="inline-block">
+              <div className="text-red-600 text-lg font-semibold mb-2">Failed to load workstation</div>
+              <p className="text-gray-600 text-sm mb-4">{error?.message}</p>
+              <button
+                onClick={resetError}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        )}
+      >
+        <Suspense fallback={<DashboardTabSkeleton />}>
+          <ExecutiveDashboardTabWrapper
+            users={context.users}
+            stats={context.stats}
+            isLoading={context.usersLoading || context.isLoading}
+            onAddUser={handleAddUser}
+            onImport={handleImport}
+            onBulkOperation={handleBulkOperation}
+            onExport={handleExport}
+            onRefresh={handleRefresh}
+          />
+        </Suspense>
+      </ErrorBoundary>
+    )
+  }
+
+  // Otherwise, render tab-based UI (legacy mode)
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Tab Navigation */}
