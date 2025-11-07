@@ -20,7 +20,7 @@ import '../styles/admin-users-layout.css'
  * ├──────────────┬────────────────────────────┤
  * │              │                            │
  * │   Sidebar    │     Main Content Area      │
- * │  (Analytics  ��   ┌──────────────────┐    │
+ * │  (Analytics  │   ┌──────────────────┐    │
  * │  + Filters)  │   │   OverviewCards  │    │
  * │              │   ├──────────────────┤    │
  * │              │   │   DirectoryHead  │    │
@@ -74,7 +74,7 @@ export default function AdminUsersLayout() {
         </aside>
 
         {/* Main Content */}
-        <main className="admin-workbench-content">
+        <main className="admin-workbench-content" data-testid="admin-main-content">
           {/* KPI Metric Cards - Builder.io slot with fallback */}
           <div className="admin-workbench-metrics">
             {isBuilderEnabled ? <BuilderMetricsSlot /> : <OverviewCards />}
