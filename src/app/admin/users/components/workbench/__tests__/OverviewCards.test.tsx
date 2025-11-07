@@ -11,7 +11,7 @@ vi.mock('../../../contexts/UsersContextProvider', () => ({
 }))
 
 // Mock the OperationsOverviewCards component
-vi.mock('../../OperationsOverviewCards', () => ({
+vi.mock('../OperationsOverviewCards', () => ({
   OperationsOverviewCards: (props: any) => (
     <div data-testid="operations-overview-cards">
       <div>Total Users: {props.metrics?.totalUsers}</div>
