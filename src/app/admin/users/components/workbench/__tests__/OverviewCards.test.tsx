@@ -4,8 +4,8 @@ import { vi, describe, it, beforeEach, expect, afterEach } from 'vitest'
 import OverviewCards from '../OverviewCards'
 
 // Setup mocks
-vi.mock('../../../contexts/UsersContextProvider')
-vi.mock('../OperationsOverviewCards', () => ({
+vi.mock('../../contexts/UsersContextProvider')
+vi.mock('../../OperationsOverviewCards', () => ({
   OperationsOverviewCards: ({ metrics, isLoading }: any) => (
     <div data-testid="operations-overview-cards">
       <div>Total Users: {metrics?.totalUsers ?? 0}</div>
