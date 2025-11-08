@@ -24,7 +24,6 @@ export default function UsersTableWrapper({
   filters = {}
 }: UsersTableWrapperProps) {
   const context = useUsersContext()
-  const [selectedUser, setSelectedUser] = React.useState<UserItem | null>(null)
 
   // Filter users based on provided filters
   const filteredUsers = useMemo(() => {
