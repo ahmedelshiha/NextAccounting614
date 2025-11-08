@@ -132,7 +132,7 @@ export function BulkOperationsTab() {
         </div>
         <Button
           onClick={() => setShowWizard(true)}
-          className="border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
         >
           + New Operation
         </Button>
