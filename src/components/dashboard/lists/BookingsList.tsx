@@ -46,6 +46,8 @@ export default function BookingsList() {
     paymentStatus?: string
   }>({})
   const [selectedIds, setSelectedIds] = useState<Array<string | number>>([])
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
+  const [assigneeId, setAssigneeId] = useState<string | null>(null)
 
   const params: BookingsQuery = {
     scope: 'admin',
