@@ -7,7 +7,9 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { X } from 'lucide-react'
 import { FilterMultiSelect, FilterOption } from './FilterMultiSelect'
 import { FilterPills } from './FilterPill'
+import { ExportButton } from './ExportButton'
 import { FilterState } from '../hooks/useFilterState'
+import { UserItem } from '../contexts/UserDataContext'
 
 export interface UserDirectoryFilterBarEnhancedProps {
   filters: FilterState
