@@ -244,6 +244,11 @@ export default function AdminSidebar({
           gap: 0.75rem;
           flex: 1;
           overflow-y: auto;
+          transition: opacity 0.3s ease;
+        }
+
+        .admin-sidebar-content.hidden {
+          display: none;
         }
 
         .admin-sidebar-trigger {
