@@ -77,31 +77,10 @@ export function AdvancedQueryBuilder({
     }
   }
 
-  // Enhanced addCondition handler that converts single condition to group if needed
+  // Add condition handler - works for both single conditions and groups
   const handleAddCondition = () => {
-    if ('conditions' in query) {
-      // Already a group, add to it
-      addConditionHook((query as FilterGroup).id)
-    } else {
-      // Single condition - need to convert to group
-      // Create a new group with the existing condition and a new empty condition
-      const condition = query as FilterCondition
-      const newGroup: FilterGroup = {
-        id: condition.id,
-        operator: 'AND',
-        conditions: [
-          condition,
-          {
-            id: `cond-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            field: 'name',
-            operator: 'contains',
-            value: ''
-          }
-        ]
-      }
-      // This is a workaround - we need to update through the hook
-      addConditionHook(condition.id)
-    }
+    const id = isGroup ? (query as FilterGroup).id : (query as FilterCondition).id
+    addConditionHook(id)
   }
 
   const isGroup = 'conditions' in query
