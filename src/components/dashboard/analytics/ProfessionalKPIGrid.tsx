@@ -172,9 +172,9 @@ export default function ProfessionalKPIGrid({ stats }: KPIStatsProps) {
 
                   {'progress' in kpi && kpi.progress !== undefined && (
                     <div className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-gray-500 text-2xs">Target Progress</span>
-                        <span className="font-medium text-2xs">{kpi.progress!.toFixed(1)}%</span>
+                      <div className="flex items-center justify-between text-2xs">
+                        <span className="text-gray-500">Target Progress</span>
+                        <span className="font-medium">{kpi.progress!.toFixed(1)}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-1.5">
                         <div
