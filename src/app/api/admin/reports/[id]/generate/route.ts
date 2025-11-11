@@ -171,9 +171,9 @@ function generateExcelReport(report: any, reportData: any): string {
       { name: 'role', label: 'Role' },
       { name: 'availabilityStatus', label: 'Status' }
     ]
-    tsv += columns.map(c => c.label).join('\t') + '\n'
+    tsv += columns.map((c: any) => c.label).join('\t') + '\n'
     reportData.rows.forEach((row: any) => {
-      tsv += columns.map(c => row[c.name] || '').join('\t') + '\n'
+      tsv += columns.map((c: any) => row[c.name] || '').join('\t') + '\n'
     })
   }
   return tsv
