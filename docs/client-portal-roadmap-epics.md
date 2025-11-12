@@ -283,16 +283,71 @@ Deliverables:
 - ✅ Unit tests and accessibility verification (ARIA, keyboard nav, RTL)
 
 ## Phase 3 — Documents Vault
+**Status: ⚠️ PARTIALLY IMPLEMENTED (50% complete)**
+
 Epic: DOC-3 Vault
-- Versioned documents, OCR, virus scan (clamav-service/), e-sign; immutable audit trails; link to tasks/returns.
+
+**Implemented** ✅:
+- File upload API with AV scanning (src/app/api/uploads/route.ts)
+- Antivirus callback handling (src/app/api/uploads/av-callback/route.ts)
+- Quarantine admin management (src/app/api/admin/uploads/quarantine/route.ts)
+- Provider abstraction (Netlify, Supabase stubbed) - src/lib/uploads-provider.ts
+- Cron rescan for errored attachments (src/lib/cron/rescan.ts)
+- Client upload UI (src/components/portal/secure-document-upload.tsx)
+- Document listing UI (src/components/portal/AccountCenter/DocumentsSection.tsx)
+- Prisma Attachment model with AV tracking
+
+**Pending** ⏳:
+- Document listing API (GET /api/documents, /api/documents/:id, download)
+- OCR integration (placeholder UI only, no processor)
+- E-sign workflow (permission exists, no provider integration)
+- Document versioning system
+- Link documents to filings/tasks
 
 ## Phase 4 — Messaging & Support
+**Status: ⚠️ LARGELY IMPLEMENTED (70% complete)**
+
 Epic: MSG-4 Cases & chat
-- Case-based threads tied to filings/tasks; SLA timers; KB and ticketing; live chat.
+
+**Implemented** ✅:
+- Real-time chat for portal users (src/app/api/portal/chat/route.ts)
+- Real-time chat for admin (src/app/api/admin/chat/route.ts)
+- Live chat widget (src/components/portal/LiveChatWidget.tsx)
+- Admin chat console (src/components/admin/chat/AdminChatConsole.tsx)
+- Chat message persistence (prisma.ChatMessage model)
+- Chat backlog and broadcast (src/lib/chat.ts)
+- Support tickets UI (src/components/portal/AccountCenter/SupportSection.tsx)
+- Real-time service integration (pluggable)
+
+**Pending** ⏳:
+- Support tickets persistence to database
+- Support ticket lifecycle (assignment, comments, SLAs)
+- Knowledge Base CRUD API and content management
+- Advanced case management and routing
+- SLA timers and escalation workflows
+- Integration with filing/task threads
 
 ## Phase 5 — Payments & Billing
+**Status: ⚠️ MOSTLY IMPLEMENTED (75% complete)**
+
 Epic: BILL-5 Billing & reconciliation
-- Firm invoices, payment methods, refunds/dunning; government payment references; reconciliation to filings.
+
+**Implemented** ✅:
+- Invoicing CRUD (src/app/api/admin/invoices/route.ts)
+- Stripe checkout integration (src/app/api/payments/checkout/route.ts)
+- Stripe webhook handler with idempotency (src/app/api/payments/webhook/route.ts)
+- Payment reconciliation cron (src/lib/cron/payments.ts)
+- Admin invoices UI (src/app/admin/invoices/page.tsx)
+- Admin payments UI (src/app/admin/payments/page.tsx)
+- Portal billing UI (src/components/portal/AccountCenter/BillingSection.tsx)
+- Invoice export (CSV)
+
+**Pending** ⏳:
+- Advanced dunning automation (retry sequences, aging)
+- Payment method vaulting (stored payment instruments)
+- PCI compliance for saved cards
+- Government payment reference capture
+- Reconciliation dashboard
 
 ## Phase 6 — Connected Banking & Receipts
 Epic: BNK-6 Banking & receipts OCR
