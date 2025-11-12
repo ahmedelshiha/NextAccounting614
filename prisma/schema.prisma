@@ -1174,6 +1174,35 @@ model NotificationTemplate {
   @@map("notification_templates")
 }
 
+model UserPaymentMethod {
+  id                String    @id @default(cuid())
+  userId            String
+  tenantId          String
+  paymentMethodId   String    @unique // Stripe payment method ID
+  type              String    // 'card', 'bank_account', 'wallet'
+  isDefault         Boolean   @default(false)
+  status            String    @default("ACTIVE") // 'ACTIVE', 'INACTIVE', 'EXPIRED'
+  last4             String?   // Last 4 digits for display
+  brand             String?   // Card brand: visa, mastercard, etc.
+  expiryMonth       Int?
+  expiryYear        Int?
+  fingerprint       String?   // For deduplication
+  billingDetails    Json?     // Encrypted billing address
+  metadata          Json?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  user              User      @relation("UserPaymentMethods", fields: [userId], references: [id], onDelete: Cascade)
+  tenant            Tenant    @relation("UserPaymentMethods", fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, paymentMethodId])
+  @@index([userId])
+  @@index([tenantId])
+  @@index([isDefault])
+  @@index([status])
+  @@map("user_payment_methods")
+}
+
 model Invoice {
   id         String        @id @default(cuid())
   tenantId   String
