@@ -178,7 +178,14 @@ const SERVICES: Service[] = [
 export const GET = withTenantContext(
   async (request: NextRequest) => {
     try {
-      const { userId } = requireTenantContext();
+      // userId is optional for public service browsing
+      let context;
+      try {
+        context = requireTenantContext();
+      } catch {
+        // Service catalog can be viewed without tenant context
+        context = { tenantId: null, userId: null };
+      }
 
       // Get query parameters
       const search = request.nextUrl.searchParams.get('search');
@@ -224,7 +231,7 @@ export const GET = withTenantContext(
       );
     }
   },
-  { requireAuth: true }
+  { requireAuth: false }
 );
 
 export const POST = withTenantContext(
