@@ -16,6 +16,8 @@ const SubmitEInvoiceSchema = z.object({
 })
 
 export const POST = withTenantContext(async (request: NextRequest) => {
+  let validated: z.infer<typeof SubmitEInvoiceSchema> | null = null
+
   try {
     const ctx = requireTenantContext()
 
@@ -29,7 +31,7 @@ export const POST = withTenantContext(async (request: NextRequest) => {
     }
 
     const body = await request.json()
-    const validated = SubmitEInvoiceSchema.parse(body)
+    validated = SubmitEInvoiceSchema.parse(body)
 
     // Get invoice with items and client
     const invoice = await prisma.invoice.findFirst({
